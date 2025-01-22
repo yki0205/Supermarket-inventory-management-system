@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CommodityMapper">
+    
+    <resultMap type="Commodity" id="CommodityResult">
+        <result property="commodityId"    column="commodity_id"    />
+        <result property="name"    column="name"    />
+        <result property="code"    column="code"    />
+        <result property="supplier"    column="supplier"    />
+        <result property="category"    column="category"    />
+        <result property="price"    column="price"    />
+        <result property="description"    column="description"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectCommodityVo">
+        select commodity_id, name, code, supplier, category, price, description, create_by, create_time, update_by, update_time, remark from commodity
+    </sql>
+
+    <select id="selectCommodityList" parameterType="Commodity" resultMap="CommodityResult">
+        <include refid="selectCommodityVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="supplier != null  and supplier != ''"> and supplier = #{supplier}</if>
+            <if test="category != null  and category != ''"> and category = #{category}</if>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+        </where>
+    </select>
+    
+    <select id="selectCommodityByCommodityId" parameterType="Long" resultMap="CommodityResult">
+        <include refid="selectCommodityVo"/>
+        where commodity_id = #{commodityId}
+    </select>
+
+    <select id="selectCommodityByCode" parameterType="String" resultMap="CommodityResult">
+        <include refid="selectCommodityVo"/>
+        where code = #{code}
+    </select>
+
+    <insert id="insertCommodity" parameterType="Commodity" useGeneratedKeys="true" keyProperty="commodityId">
+        insert into commodity
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="code != null and code != ''">code,</if>
+            <if test="supplier != null">supplier,</if>
+            <if test="category != null and category != ''">category,</if>
+            <if test="price != null">price,</if>
+            <if test="description != null">description,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="code != null and code != ''">#{code},</if>
+            <if test="supplier != null">#{supplier},</if>
+            <if test="category != null and category != ''">#{category},</if>
+            <if test="price != null">#{price},</if>
+            <if test="description != null">#{description},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCommodity" parameterType="Commodity">
+        update commodity
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="code != null and code != ''">code = #{code},</if>
+            <if test="supplier != null">supplier = #{supplier},</if>
+            <if test="category != null and category != ''">category = #{category},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where commodity_id = #{commodityId}
+    </update>
+
+    <delete id="deleteCommodityByCommodityId" parameterType="Long">
+        delete from commodity where commodity_id = #{commodityId}
+    </delete>
+
+    <delete id="deleteCommodityByCommodityIds" parameterType="String">
+        delete from commodity where commodity_id in 
+        <foreach item="commodityId" collection="array" open="(" separator="," close=")">
+            #{commodityId}
+        </foreach>
+    </delete>
+
+</mapper>

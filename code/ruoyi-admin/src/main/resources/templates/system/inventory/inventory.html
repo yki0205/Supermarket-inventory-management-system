@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('库存列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>库存量：</label>
+                                <input type="text" name="remainder"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:inventory:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:inventory:remove')}]];
+        var prefix = ctx + "system/inventory";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "库存",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'inventoryId',
+                    title: '库存id',
+                    visible: false
+                },
+                {
+                    field: 'commodityCode',
+                    title: '商品编码'
+                },{
+                    field: 'commodityName',
+                    title: '商品名称'
+                },
+                {
+                    field: 'remainder',
+                    title: '库存量'
+                },
+                    {
+                        title: '预警',
+                        align: 'center',
+                        formatter: function(value, row, index) {
+                            var actions = [];
+                            if(row.remainder<11){
+                                actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" ><i class="fa fa-remove"></i>库存不足</a>');
+
+                            }
+                            return actions.join('');
+                        }
+                    }]
+            };
+            $.table.init(options);
+
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SaleMapper">
+    
+    <resultMap type="Sale" id="SaleResult">
+        <result property="saleId"    column="sale_id"    />
+        <result property="commodityCode"    column="commodity_code"    />
+        <result property="date"    column="date"    />
+        <result property="number"    column="number"    />
+        <result property="totalPrice"    column="total_price"    />
+        <result property="unitPrice"    column="unit_price"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSaleVo">
+        select sale_id, commodity_code, date, number, total_price, unit_price, create_by, create_time, update_by, update_time, remark from sale
+    </sql>
+
+    <select id="selectSaleList" parameterType="Sale" resultMap="SaleResult">
+        <include refid="selectSaleVo"/>
+        <where>  
+            <if test="commodityCode != null  and commodityCode != ''"> and commodity_code = #{commodityCode}</if>
+            <if test="date != null "> and date = #{date}</if>
+            <if test="number != null "> and number = #{number}</if>
+            <if test="totalPrice != null "> and total_price = #{totalPrice}</if>
+            <if test="unitPrice != null "> and unit_price = #{unitPrice}</if>
+        </where>
+    </select>
+    
+    <select id="selectSaleBySaleId" parameterType="Long" resultMap="SaleResult">
+        <include refid="selectSaleVo"/>
+        where sale_id = #{saleId}
+    </select>
+
+    <insert id="insertSale" parameterType="Sale" useGeneratedKeys="true" keyProperty="saleId">
+        insert into sale
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="commodityCode != null and commodityCode != ''">commodity_code,</if>
+            <if test="date != null">date,</if>
+            <if test="number != null">number,</if>
+            <if test="totalPrice != null">total_price,</if>
+            <if test="unitPrice != null">unit_price,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="commodityCode != null and commodityCode != ''">#{commodityCode},</if>
+            <if test="date != null">#{date},</if>
+            <if test="number != null">#{number},</if>
+            <if test="totalPrice != null">#{totalPrice},</if>
+            <if test="unitPrice != null">#{unitPrice},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSale" parameterType="Sale">
+        update sale
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="commodityCode != null and commodityCode != ''">commodity_code = #{commodityCode},</if>
+            <if test="date != null">date = #{date},</if>
+            <if test="number != null">number = #{number},</if>
+            <if test="totalPrice != null">total_price = #{totalPrice},</if>
+            <if test="unitPrice != null">unit_price = #{unitPrice},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where sale_id = #{saleId}
+    </update>
+
+    <delete id="deleteSaleBySaleId" parameterType="Long">
+        delete from sale where sale_id = #{saleId}
+    </delete>
+
+    <delete id="deleteSaleBySaleIds" parameterType="String">
+        delete from sale where sale_id in 
+        <foreach item="saleId" collection="array" open="(" separator="," close=")">
+            #{saleId}
+        </foreach>
+    </delete>
+
+</mapper>

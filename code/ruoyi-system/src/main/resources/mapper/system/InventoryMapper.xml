@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.InventoryMapper">
+    
+    <resultMap type="Inventory" id="InventoryResult">
+        <result property="inventoryId"    column="inventory_id"    />
+        <result property="commodityCode"    column="commodity_code"    />
+        <result property="remainder"    column="remainder"    />
+    </resultMap>
+
+    <sql id="selectInventoryVo">
+        select inventory_id, commodity_code, remainder from inventory
+    </sql>
+
+    <select id="selectInventoryList" parameterType="Inventory" resultMap="InventoryResult">
+        <include refid="selectInventoryVo"/>
+        <where>  
+            <if test="commodityCode != null  and commodityCode != ''"> and commodity_code = #{commodityCode}</if>
+            <if test="remainder != null "> and remainder = #{remainder}</if>
+        </where>
+    </select>
+    
+    <select id="selectInventoryByspCode" parameterType="String" resultMap="InventoryResult">
+        <include refid="selectInventoryVo"/>
+        where commodity_code = #{commodityCode}
+    </select>
+
+    <select id="selectInventoryByInventoryId" parameterType="Long" resultMap="InventoryResult">
+        <include refid="selectInventoryVo"/>
+        where inventory_id = #{inventoryId}
+    </select>
+
+    <insert id="insertInventory" parameterType="Inventory" useGeneratedKeys="true" keyProperty="inventoryId">
+        insert into inventory
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="commodityCode != null and commodityCode != ''">commodity_code,</if>
+            <if test="remainder != null">remainder,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="commodityCode != null and commodityCode != ''">#{commodityCode},</if>
+            <if test="remainder != null">#{remainder},</if>
+         </trim>
+    </insert>
+
+    <update id="updateInventory" parameterType="Inventory">
+        update inventory
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="commodityCode != null and commodityCode != ''">commodity_code = #{commodityCode},</if>
+            <if test="remainder != null">remainder = #{remainder},</if>
+        </trim>
+        where inventory_id = #{inventoryId}
+    </update>
+
+    <delete id="deleteInventoryByInventoryId" parameterType="Long">
+        delete from inventory where inventory_id = #{inventoryId}
+    </delete>
+
+    <delete id="deleteInventoryByInventoryIds" parameterType="String">
+        delete from inventory where inventory_id in 
+        <foreach item="inventoryId" collection="array" open="(" separator="," close=")">
+            #{inventoryId}
+        </foreach>
+    </delete>
+
+</mapper>

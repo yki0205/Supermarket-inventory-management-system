@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改商品')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-commodity-edit" th:object="${commodity}">
+            <input name="commodityId" th:field="*{commodityId}" type="hidden">
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label is-required">商品名称：</label>
+                    <div class="col-sm-8">
+                        <input name="name" th:field="*{name}" class="form-control" type="text" required>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label is-required">商品编码：</label>
+                    <div class="col-sm-8">
+                        <input name="code" th:field="*{code}" class="form-control" type="text" required>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">供应商：</label>
+                    <div class="col-sm-8">
+                        <input name="supplier" th:field="*{supplier}" class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label is-required">商品分类：</label>
+                    <div class="col-sm-8">
+                        <input name="category" th:field="*{category}" class="form-control" type="text" required>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label is-required">商品价格：</label>
+                    <div class="col-sm-8">
+                        <input name="price" th:field="*{price}" class="form-control" type="text" required>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">商品描述：</label>
+                    <div class="col-sm-8">
+                        <input name="description" th:field="*{description}" class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">备注：</label>
+                    <div class="col-sm-8">
+                        <textarea name="remark" class="form-control">[[*{remark}]]</textarea>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/commodity";
+        $("#form-commodity-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-commodity-edit').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

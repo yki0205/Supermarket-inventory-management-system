@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('销售记录列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>商品编码：</label>
+                                <input type="text" name="commodityCode"/>
+                            </li>
+                            <li>
+                                <label>销售时间：</label>
+                                <input type="text" class="time-input" placeholder="请选择销售时间" name="date"/>
+                            </li>
+                            <li>
+                                <label>销售数量：</label>
+                                <input type="text" name="number"/>
+                            </li>
+                            <li>
+                                <label>销售总价：</label>
+                                <input type="text" name="totalPrice"/>
+                            </li>
+                            <li>
+                                <label>销售单价：</label>
+                                <input type="text" name="unitPrice"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:sale:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:sale:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:sale:remove')}]];
+        var prefix = ctx + "system/sale";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "销售记录",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'saleId',
+                    title: '',
+                    visible: false
+                },
+                {
+                    field: 'commodityCode',
+                    title: '商品编码'
+                },
+                {
+                    field: 'date',
+                    title: '销售时间'
+                },
+                {
+                    field: 'number',
+                    title: '销售数量'
+                },
+                {
+                    field: 'totalPrice',
+                    title: '销售总价'
+                },
+                {
+                    field: 'unitPrice',
+                    title: '销售单价'
+                },
+                {
+                    field: 'remark',
+                    title: '备注'
+                }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>
